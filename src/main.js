@@ -1,6 +1,5 @@
 import { createApp } from 'vue';
 
-import fbAuth from '@/firebase/index';
 import { vuetify } from '@/plugins/vuetify';
 
 import router from '@/router/index';

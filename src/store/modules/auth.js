@@ -1,10 +1,18 @@
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
+
+import fbAuth from '@/firebase/index';
 
 const state = {
   currentUser: {},
 
   signInLoading: false,
   signUpLoading: false,
+
+  signOutLoading: false,
 };
 
 const getters = {
@@ -38,6 +46,18 @@ const mutations = {
   'SIGN_UP_FAILURE': (state) => {
     state.signUpLoading = false;
   },
+
+  'SIGN_OUT_REQUEST': (state) => {
+    state.signOutLoading = true;
+  },
+  'SIGN_OUT_SUCCESS': (state, payload) => {
+    state.currentUser = payload;
+
+    state.signOutLoading = false;
+  },
+  'SIGN_OUT_FAILURE': (state) => {
+    state.signOutLoading = false;
+  },
 };
 
 const actions = {
@@ -47,9 +67,7 @@ const actions = {
     try {
       const { email, password } = params;
 
-      const auth = getAuth();
-
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(fbAuth, email, password);
 
       const user = userCredential.user;
 
@@ -67,15 +85,27 @@ const actions = {
     try {
       const { email, password } = params;
 
-      const auth = getAuth();
-
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(fbAuth, email, password);
 
       const user = userCredential.user;
 
       store.commit('SIGN_UP_SUCCESS', user);
     } catch (error) {
       store.commit('SIGN_UP_FAILURE');
+
+      throw new Error(error);
+    }
+  },
+
+  async signOut(store) {
+    store.commit('SIGN_OUT_REQUEST');
+
+    try {
+      await signOut(fbAuth);
+
+      store.commit('SIGN_OUT_SUCCESS', {});
+    } catch (error) {
+      store.commit('SIGN_OUT_FAILURE');
 
       throw new Error(error);
     }
