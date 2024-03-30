@@ -3,7 +3,7 @@
     class="mx-auto my-auto pa-8 text-center"
     width="500"
   >
-    <v-form @submit.prevent>
+    <v-form @submit.prevent="onFormSubmit">
       <v-text-field
         v-model="signInFormData.email"
         type="email"
@@ -30,7 +30,7 @@
 
       <v-btn
         class="mt-4 mx-auto"
-        variant="tonal"
+        variant="outlined"
         @click="redirectToSignUpView"
       >
         Sign Up
@@ -44,7 +44,13 @@ import { reactive } from 'vue';
 
 import { useRouter } from 'vue-router';
 
+const emit = defineEmits(['on-form-submit']);
+
 const router = useRouter();
+
+const onFormSubmit = () => {
+  emit('on-form-submit', signInFormData);
+};
 
 const redirectToSignUpView = () => {
   router.push('sign-up');
