@@ -47,6 +47,10 @@ const mutations = {
     state.signUpLoading = false;
   },
 
+  'SET_CURRENT_USER': (state, payload) => {
+    state.currentUser = payload;
+  },
+
   'SIGN_OUT_REQUEST': (state) => {
     state.signOutLoading = true;
   },
@@ -95,6 +99,10 @@ const actions = {
 
       throw new Error(error);
     }
+  },
+
+  setCurrentUser(store, user) {
+    store.commit('SET_CURRENT_USER', user);
   },
 
   async signOut(store) {
