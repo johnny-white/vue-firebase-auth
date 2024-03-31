@@ -54,9 +54,7 @@ const mutations = {
   'SIGN_OUT_REQUEST': (state) => {
     state.signOutLoading = true;
   },
-  'SIGN_OUT_SUCCESS': (state, payload) => {
-    state.currentUser = payload;
-
+  'SIGN_OUT_SUCCESS': (state) => {
     state.signOutLoading = false;
   },
   'SIGN_OUT_FAILURE': (state) => {
@@ -111,7 +109,7 @@ const actions = {
     try {
       await signOut(fbAuth);
 
-      store.commit('SIGN_OUT_SUCCESS', {});
+      store.commit('SIGN_OUT_SUCCESS');
     } catch (error) {
       store.commit('SIGN_OUT_FAILURE');
 
