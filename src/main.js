@@ -3,7 +3,7 @@ import { createApp } from 'vue';
 import { vuetify } from '@/plugins/vuetify';
 
 import router from '@/router/index';
-import store from '@store/index';
+import pinia from '@store/index';
 
 import '@/assets/styles/main.scss';
 
@@ -14,5 +14,5 @@ const app = createApp(App);
 app
   .use(vuetify)
   .use(router)
-  .use(store)
+  .use(pinia)
   .mount('#app');

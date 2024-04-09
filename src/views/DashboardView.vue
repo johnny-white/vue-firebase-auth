@@ -16,18 +16,20 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '@store/modules/auth';
 
-import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
-const store = useStore();
+const authStore = useAuthStore();
 const router = useRouter();
 
-const currentUser = computed(() => store.getters['auth/currentUser']);
+const { currentUser } = storeToRefs(authStore);
+
+const { signOut } = authStore;
 
 const onSignOut = async () => {
-  await store.dispatch('auth/signOut');
+  await signOut();
 
   router.push('sign-in');
 };

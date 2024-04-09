@@ -7,16 +7,18 @@
 <script setup>
 import { onMounted } from 'vue';
 
-import { useStore } from 'vuex';
+import { useAuthStore } from '@store/modules/auth';
 
 import { onAuthStateChanged } from 'firebase/auth';
 import fbAuth from '@/firebase/index';
 
-const store = useStore();
+const authStore = useAuthStore();
+
+const { setCurrentUser } = authStore;
 
 onMounted(() => {
   onAuthStateChanged(fbAuth, (user) => {
-    store.dispatch('auth/setCurrentUser', user);
+    setCurrentUser(user);
   });
 });
 </script>

@@ -1,129 +1,88 @@
+import { defineStore } from 'pinia';
+
+import { ref } from 'vue';
+
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signOut,
+  signOut as fbSignOut,
 } from 'firebase/auth';
 
 import fbAuth from '@/firebase/index';
 
-const state = {
-  currentUser: {},
+export const useAuthStore = defineStore('auth', () => {
+  // state
+  const currentUser = ref({});
 
-  signInLoading: false,
-  signUpLoading: false,
+  const signInLoading = ref(false);
 
-  signOutLoading: false,
-};
+  const signUpLoading = ref(false);
 
-const getters = {
-  currentUser: (state) => state.currentUser,
+  const signOutLoading = ref(false);
 
-  signInLoading: (state) => state.signInLoading,
-  signUpLoading: (state) => state.signUpLoading,
-};
-
-const mutations = {
-  'SIGN_IN_REQUEST': (state) => {
-    state.signInLoading = true;
-  },
-  'SIGN_IN_SUCCESS': (state, payload) => {
-    state.currentUser = payload;
-
-    state.signInLoading = false;
-  },
-  'SIGN_IN_FAILURE': (state) => {
-    state.signInLoading = false;
-  },
-
-  'SIGN_UP_REQUEST': (state) => {
-    state.signUpLoading = true;
-  },
-  'SIGN_UP_SUCCESS': (state, payload) => {
-    state.currentUser = payload;
-
-    state.signUpLoading = false;
-  },
-  'SIGN_UP_FAILURE': (state) => {
-    state.signUpLoading = false;
-  },
-
-  'SET_CURRENT_USER': (state, payload) => {
-    state.currentUser = payload;
-  },
-
-  'SIGN_OUT_REQUEST': (state) => {
-    state.signOutLoading = true;
-  },
-  'SIGN_OUT_SUCCESS': (state) => {
-    state.signOutLoading = false;
-  },
-  'SIGN_OUT_FAILURE': (state) => {
-    state.signOutLoading = false;
-  },
-};
-
-const actions = {
-  async signIn(store, params) {
-    store.commit('SIGN_IN_REQUEST');
+  // actions
+  const signIn = async (params) => {
+    signInLoading.value = true;
 
     try {
       const { email, password } = params;
 
       const userCredential = await signInWithEmailAndPassword(fbAuth, email, password);
 
-      const user = userCredential.user;
+      currentUser.value = userCredential.user;
 
-      store.commit('SIGN_IN_SUCCESS', user);
+      signInLoading.value = false;
     } catch (error) {
-      store.commit('SIGN_IN_FAILURE');
+      signInLoading.value = false;
 
       throw new Error(error);
     }
-  },
+  };
 
-  async signUp(store, params) {
-    store.commit('SIGN_UP_REQUEST');
+  const signUp = async (params) => {
+    signUpLoading.value = true;
 
     try {
       const { email, password } = params;
 
       const userCredential = await createUserWithEmailAndPassword(fbAuth, email, password);
 
-      const user = userCredential.user;
+      currentUser.value = userCredential.user;
 
-      store.commit('SIGN_UP_SUCCESS', user);
+      signUpLoading.value = false;
     } catch (error) {
-      store.commit('SIGN_UP_FAILURE');
+      signUpLoading.value = false;
 
       throw new Error(error);
     }
-  },
+  };
 
-  setCurrentUser(store, user) {
-    store.commit('SET_CURRENT_USER', user);
-  },
+  const setCurrentUser = (user) => {
+    currentUser.value = user;
+  };
 
-  async signOut(store) {
-    store.commit('SIGN_OUT_REQUEST');
+  const signOut = async () => {
+    signOutLoading.value = true;
 
     try {
-      await signOut(fbAuth);
-
-      store.commit('SIGN_OUT_SUCCESS');
+      await fbSignOut(fbAuth);
+      signOutLoading.value = false;
     } catch (error) {
-      store.commit('SIGN_OUT_FAILURE');
+      signOutLoading.value = false;
 
       throw new Error(error);
     }
-  },
-};
+  };
 
-const auth = {
-  namespaced: true,
-  state,
-  getters,
-  mutations,
-  actions,
-};
+  return {
+    currentUser,
+    signInLoading,
+    signUpLoading,
+    signOutLoading,
 
-export default auth;
+    signIn,
+    signUp,
+    setCurrentUser,
+    signOut,
+  };
+});

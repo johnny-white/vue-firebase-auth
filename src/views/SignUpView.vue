@@ -3,20 +3,22 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '@store/modules/auth';
 
-import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
 import SignUpForm from '@/components/SignUpForm.vue';
 
-const store = useStore();
+const authStore = useAuthStore();
+
 const router = useRouter();
 
-const currentUser = computed(() => store.getters['auth/currentUser']);
+const { currentUser } = storeToRefs(authStore);
+const { signUp } = authStore;
 
 const onFormSubmit = async (data) => {
-  await store.dispatch('auth/signUp', data);
+  await signUp(data);
 
   if (currentUser.value) router.push('dashboard');
 };
