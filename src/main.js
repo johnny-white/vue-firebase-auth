@@ -9,10 +9,13 @@ import '@/assets/styles/main.scss';
 
 import App from './App.vue';
 
+import Notifications from '@kyvg/vue3-notification';
+
 const app = createApp(App);
 
 app
   .use(vuetify)
   .use(router)
   .use(pinia)
+  .use(Notifications)
   .mount('#app');

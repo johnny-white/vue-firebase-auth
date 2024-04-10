@@ -31,6 +31,8 @@
       <v-btn
         class="mt-4 mx-auto"
         variant="outlined"
+        :loading="formLoading"
+        :disabled="formLoading"
         @click="redirectToSignUpView"
       >
         Sign In
@@ -43,6 +45,15 @@
 import { reactive } from 'vue';
 
 import { useRouter } from 'vue-router';
+
+const props = defineProps({
+  formLoading: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const { formLoading } = props;
 
 const emit = defineEmits(['on-form-submit']);
 

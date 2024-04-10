@@ -1,5 +1,8 @@
 <template>
-  <SignInForm @on-form-submit="onFormSubmit" />
+  <SignInForm
+    :form-loading="signInLoading"
+    @on-form-submit="onFormSubmit"
+  />
 </template>
 
 <script setup>
@@ -14,7 +17,7 @@ const authStore = useAuthStore();
 
 const router = useRouter();
 
-const { currentUser } = storeToRefs(authStore);
+const { currentUser, signInLoading } = storeToRefs(authStore);
 const { signIn } = authStore;
 
 const onFormSubmit = async (data) => {

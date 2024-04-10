@@ -20,6 +20,8 @@
         class="mt-2"
         type="submit"
         block
+        :loading="formLoading"
+        :disabled="formLoading"
       >
         Sign in
       </v-btn>
@@ -40,9 +42,18 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, toRefs } from 'vue';
 
 import { useRouter } from 'vue-router';
+
+const props = defineProps({
+  formLoading: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const { formLoading } = toRefs(props);
 
 const emit = defineEmits(['on-form-submit']);
 

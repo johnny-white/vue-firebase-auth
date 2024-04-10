@@ -1,6 +1,8 @@
 <template>
   <main>
     <RouterView />
+
+    <notifications position="bottom right" />
   </main>
 </template>
 
